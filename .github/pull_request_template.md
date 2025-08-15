@@ -11,7 +11,7 @@ Brief description of the changes made.
 - [ ] Tested on Dell Precision 7780
 - [ ] Tested with NVIDIA discrete graphics
 - [ ] Tested with external displays connected
-- [ ] Tested in KDE Plasma environment
+- [ ] Tested in KScreen-compatible environment
 
 ## How Has This Been Tested?
 Please describe the tests that you ran to verify your changes:

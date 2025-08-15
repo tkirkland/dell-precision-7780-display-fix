@@ -37,7 +37,7 @@ Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: $ARCHITECTURE
-Depends: systemd, plasma-workspace
+Depends: systemd, kscreen | plasma-workspace
 Maintainer: $MAINTAINER
 Description: $DESCRIPTION
  This package provides a fix for the display priority issue on Dell Precision 7780
@@ -186,9 +186,9 @@ Hardware Detection
 ------------------
 The fix only activates on systems that meet ALL criteria:
 - Dell Precision 7780 laptop
-- NVIDIA discrete graphics (Intel disabled in BIOS)
+- NVIDIA discrete graphics (Intel disabled in BIOS)  
 - Multiple displays connected
-- KDE Plasma desktop environment
+- KScreen-compatible desktop environment
 
 Usage
 -----

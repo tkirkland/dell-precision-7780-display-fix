@@ -18,7 +18,7 @@ A clear and concise description of what the bug is.
 
 **Software Information**
 - OS: [e.g. Ubuntu 22.04, Debian 12]
-- Desktop: [e.g. KDE Plasma 5.27]
+- Desktop: [e.g. KDE Plasma 5.27, GNOME with KScreen, etc.]
 - Kernel: [e.g. 6.2.0-39-generic]
 
 **Steps to Reproduce**

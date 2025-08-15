@@ -2,13 +2,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform: Linux](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.linux.org/)
-[![Desktop: KDE Plasma](https://img.shields.io/badge/Desktop-KDE%20Plasma-1d99f3.svg)](https://kde.org/plasma-desktop/)
+[![Desktop: KScreen Compatible](https://img.shields.io/badge/Desktop-KScreen%20Compatible-1d99f3.svg)](https://invent.kde.org/plasma/kscreen)
 
-A hardware-specific fix for Dell Precision 7780 laptops that resolves display priority issues when using NVIDIA discrete graphics with KDE Plasma on Debian-based Linux distributions.
+A hardware-specific fix for Dell Precision 7780 laptops that resolves display priority issues when using NVIDIA discrete graphics with KScreen-compatible desktop environments on Debian-based Linux distributions.
 
 ## 🔧 Problem
 
-When booting a Dell Precision 7780 with an external display connected via HDMI, KDE Plasma incorrectly assigns the external display as primary (priority 1) instead of the internal laptop display (eDP-1). This causes:
+When booting a Dell Precision 7780 with an external display connected via HDMI, the display management system incorrectly assigns the external display as primary (priority 1) instead of the internal laptop display (eDP-1). This causes:
 
 - Desktop appearing on external display instead of laptop screen
 - Window management issues in multi-monitor setups  
@@ -60,15 +60,15 @@ display_priority_manager --mode check --force --verbose
 - **Multiple displays** connected (internal + external)
 
 ### Software Requirements
-- **KDE Plasma** desktop environment
-- **kscreen-doctor** (part of plasma-workspace)
+- **KScreen-compatible desktop environment** (KDE Plasma, or other DE with KScreen support)
+- **kscreen-doctor** command-line tool (usually from kscreen or plasma-workspace packages)
 - **systemd** for service management
 - **Linux kernel** with DRM support
 
 ### Supported Distributions
-- Ubuntu 22.04+ with KDE Plasma
-- Debian 12+ with KDE Plasma
-- Other Debian-based distributions with KDE Plasma
+- Ubuntu 22.04+ with KDE Plasma or KScreen support
+- Debian 12+ with KDE Plasma or KScreen support  
+- Other Debian-based distributions with KScreen-compatible desktop environments
 
 ## 🎛️ Usage
 
@@ -223,7 +223,7 @@ This software is specifically designed for Dell Precision 7780 laptops with NVID
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/dell-precision-7780-display-fix/issues)
 - **Documentation**: [docs/](docs/)
-- **Hardware Requirements**: Dell Precision 7780 + NVIDIA discrete + KDE Plasma
+- **Hardware Requirements**: Dell Precision 7780 + NVIDIA discrete + KScreen support
 
 ---
 

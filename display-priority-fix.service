@@ -3,8 +3,7 @@ Description=Dell Precision 7780 Display Priority Fix
 Documentation=man:display-priority-fix(8)
 After=graphical-session.target
 Wants=graphical-session.target
-# Ensure we run after KDE session is started but before user sees desktop
-Before=plasma-workspace.service
+# Ensure we run after display management is available
 
 [Service]
 Type=oneshot
