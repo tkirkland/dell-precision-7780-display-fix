@@ -57,12 +57,17 @@ install_to_chroot() {
     local temp_dir="$chroot_path/tmp/$FIX_NAME"
     mkdir -p "$temp_dir"
     
-    # Copy source files
-    cp "$SCRIPT_DIR"/*.c "$temp_dir/"
-    cp "$SCRIPT_DIR"/*.cpp "$temp_dir/"
-    cp "$SCRIPT_DIR"/*.sh "$temp_dir/"
-    cp "$SCRIPT_DIR"/*.service "$temp_dir/"
-    cp "$SCRIPT_DIR"/Makefile "$temp_dir/"
+    # Copy source files from project root
+    local project_dir="$(cd "$SCRIPT_DIR/.." && pwd)"
+    
+    cp "$project_dir"/src/*.c "$temp_dir/"
+    cp "$project_dir"/*.service "$temp_dir/"
+    cp "$project_dir"/Makefile "$temp_dir/"
+    
+    # Copy any shell scripts from scripts directory
+    if ls "$SCRIPT_DIR"/*.sh >/dev/null 2>&1; then
+        cp "$SCRIPT_DIR"/*.sh "$temp_dir/"
+    fi
     
     # Create build script for chroot
     cat > "$temp_dir/build_in_chroot.sh" << 'EOF'
@@ -124,7 +129,7 @@ LOG_FILE="/var/log/first-boot-display-fix.log"
     echo "Hardware: $(cat /sys/class/dmi/id/sys_vendor) $(cat /sys/class/dmi/id/product_name)"
     
     # Test hardware detection
-    if /usr/local/bin/hardware_detection_test; then
+    if /usr/local/bin/display_priority_manager --mode check; then
         echo "Hardware check passed - fix will be active"
         
         # Ensure service is enabled for all users
@@ -188,9 +193,7 @@ validate_installation() {
     
     # Check if files are installed
     local files=(
-        "/usr/local/bin/display_priority_fix.sh"
-        "/usr/local/bin/hardware_detection_test"
-        "/usr/local/lib/libdisplay_priority_override.so"
+        "/usr/local/bin/display_priority_manager"
         "/etc/systemd/system/display-priority-fix.service"
     )
     
@@ -200,8 +203,8 @@ validate_installation() {
         fi
     done
     
-    # Test hardware detection binary
-    if ! chroot "$chroot_path" /usr/local/bin/hardware_detection_test >/dev/null 2>&1; then
+    # Test hardware detection using display_priority_manager
+    if ! chroot "$chroot_path" /usr/local/bin/display_priority_manager --mode check >/dev/null 2>&1; then
         log "Warning: Hardware detection test failed in chroot (expected if not Dell hardware)"
     fi
     
