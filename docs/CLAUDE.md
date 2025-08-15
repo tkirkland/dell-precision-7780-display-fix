@@ -48,13 +48,10 @@ sudo ./install_to_iso.sh /path/to/chroot
 
 ```bash
 # Test hardware detection
-./hardware_detection_test
-
-# Analyze current display setup
-./analyze_display_priority.sh
+./build/display_priority_manager --mode check
 
 # Test fix manually
-sudo /usr/local/bin/display_priority_fix.sh
+sudo /usr/local/bin/display_priority_manager
 
 # Check service status
 systemctl status display-priority-fix.service
@@ -77,20 +74,11 @@ The solution implements a **three-layer approach** with **hardware-specific acti
 ### Layer 2: Priority Correction Mechanisms
 Three complementary approaches:
 
-1. **Script-based Fix** (`display_priority_fix.sh`) - Primary approach
-   - Uses `kscreen-doctor` to correct display priorities
-   - Runs via systemd service at boot
-   - Most reliable and tested method
-
-2. **Library Interception** (`display_priority_override.c`) - Advanced
-   - LD_PRELOAD library that intercepts KScreen function calls
-   - Runtime priority override for experimental use
-   - Hooks into `_ZNK7KScreen6Output8priorityEv` and related functions
-
-3. **Configuration Monitor** (`kscreen_config_override.cpp`) - Alternative  
-   - Monitors KScreen config files for changes
-   - Modifies JSON configs before KScreen applies them
-   - C++ implementation with inotify filesystem watching
+The unified `display_priority_manager` binary provides multiple operation modes:
+   - **Hardware Detection**: DMI and GPU validation
+   - **Priority Correction**: Uses `kscreen-doctor` to fix display priorities
+   - **Service Integration**: Runs via systemd service at boot
+   - **Manual Operation**: Can be run manually for testing/debugging
 
 ### Layer 3: System Integration
 - **Systemd Service**: Automatic activation at graphical session start
@@ -109,10 +97,11 @@ Three complementary approaches:
 
 ## Build Targets
 
-The Makefile produces three main executables:
-- `hardware_detection_test` - Standalone hardware detection binary
-- `libdisplay_priority_override.so` - LD_PRELOAD shared library
-- `kscreen_config_override` - Config file monitoring daemon
+The project builds a unified binary:
+- `display_priority_manager` - Main executable with multiple operation modes
+  - `--mode check` - Hardware detection and validation
+  - `--mode fix` - Apply display priority corrections
+  - `--mode service` - Service mode for systemd integration
 
 ## Development Environment Variables
 
@@ -133,10 +122,9 @@ export DISABLE_DISPLAY_FIX=1    # Force disable
 
 ## Log File Locations
 
-- `/tmp/display_priority_fix.log` - Main fix script output
-- `/tmp/kscreen_priority_override.log` - Config monitor output  
+- System journal: `journalctl -u display-priority-fix.service` - Primary logging
+- `/tmp/display_priority_fix.log` - Service execution logs
 - `/var/log/first-boot-display-fix.log` - ISO integration logs
-- System journal: `journalctl -u display-priority-fix.service`
 
 ## Critical Implementation Details
 
@@ -146,6 +134,6 @@ export DISABLE_DISPLAY_FIX=1    # Force disable
 - Internal: `eDP-1`, `eDP-2`, `LVDS-1`
 - External: `HDMI-A-1`, `HDMI-A-2`, `DP-1`, `DP-2`
 
-**Systemd Service Timing**: Runs after `graphical-session.target` but before `plasma-workspace.service` to catch the display configuration early.
+**Systemd Service Timing**: Runs after `graphical.target` to ensure display management is available.
 
 **Library Symbol Interception**: Hooks mangled C++ symbols from KScreen library using `dlsym` interception in the LD_PRELOAD approach.

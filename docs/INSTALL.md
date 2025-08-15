@@ -40,14 +40,13 @@ sudo apt-get install -f
 
 # 5. Verify installation
 systemctl status display-priority-fix.service
-/usr/local/bin/hardware_detection_test
+/usr/local/bin/display_priority_manager --mode check
 ```
 
 **What this installs:**
-- All binaries and scripts to `/usr/local/bin/`
-- Shared library to `/usr/local/lib/`
-- Systemd service to `/etc/systemd/system/`
-- Documentation to `/usr/share/doc/`
+- Unified display priority manager to `/usr/local/bin/display_priority_manager`
+- Systemd service to `/etc/systemd/system/display-priority-fix.service`
+- Documentation to `/usr/share/doc/dell-precision-7780-display-fix/`
 
 **Automatic behavior:**
 - Hardware detection runs during package installation
@@ -69,7 +68,7 @@ sudo make install
 sudo systemctl daemon-reload
 
 # 4. Test hardware detection
-./hardware_detection_test
+./build/display_priority_manager --mode check
 
 # 5. Enable service if hardware is compatible
 sudo systemctl enable display-priority-fix.service
@@ -97,14 +96,13 @@ For developers working on the fix.
 make dev
 
 # 2. Test without installation
-./hardware_detection_test
-LD_PRELOAD=./libdisplay_priority_override.so kscreen-doctor -o
+./build/display_priority_manager --mode check
 
 # 3. Install for testing
 make install PREFIX=/usr/local/dev
 
 # 4. Test the fix manually
-sudo /usr/local/dev/bin/display_priority_fix.sh
+sudo /usr/local/dev/bin/display_priority_manager
 ```
 
 ### Method 4: ISO Integration
@@ -128,7 +126,7 @@ sudo ./install_to_iso.sh /path/to/iso/chroot
 
 1. **Check hardware detection:**
    ```bash
-   /usr/local/bin/hardware_detection_test
+   /usr/local/bin/display_priority_manager --mode check
    ```
    Expected output:
    ```
@@ -172,7 +170,7 @@ sudo systemctl start display-priority-fix.service
 ```bash
 # Force enable on any hardware (for testing)
 export FORCE_DISPLAY_FIX=1
-sudo /usr/local/bin/display_priority_fix.sh
+sudo /usr/local/bin/display_priority_manager
 
 # Force disable on compatible hardware
 export DISABLE_DISPLAY_FIX=1
@@ -255,8 +253,8 @@ sudo ldconfig
 
 **Permission denied:**
 ```bash
-# Fix script permissions
-sudo chmod 755 /usr/local/bin/display_priority_fix.sh
+# Fix binary permissions
+sudo chmod 755 /usr/local/bin/display_priority_manager
 
 # Fix service permissions
 sudo chmod 644 /etc/systemd/system/display-priority-fix.service
@@ -310,9 +308,7 @@ sudo make uninstall
 # Or remove manually
 sudo systemctl disable display-priority-fix.service
 sudo rm -f /etc/systemd/system/display-priority-fix.service
-sudo rm -f /usr/local/bin/display_priority_fix.sh
-sudo rm -f /usr/local/bin/hardware_detection_test
-sudo rm -f /usr/local/lib/libdisplay_priority_override.so
+sudo rm -f /usr/local/bin/display_priority_manager
 sudo systemctl daemon-reload
 sudo ldconfig
 ```
