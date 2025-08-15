@@ -1,0 +1,26 @@
+[Unit]
+Description=Dell Precision 7780 Display Priority Fix
+Documentation=man:display-priority-fix(8)
+After=graphical-session.target
+Wants=graphical-session.target
+# Ensure we run after KDE session is started but before user sees desktop
+Before=plasma-workspace.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/display_priority_manager --verbose --log /var/log/display_priority_manager.log
+# Set environment for kscreen-doctor
+Environment="XDG_RUNTIME_DIR=/run/user/1000"
+Environment="WAYLAND_DISPLAY=wayland-0"
+# Run as the user who owns the graphical session
+User=1000
+Group=1000
+# Timeout after 60 seconds
+TimeoutStartSec=60
+# Log output
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=graphical-session.target

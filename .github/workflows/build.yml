@@ -1,0 +1,41 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential gcc make
+    
+    - name: Build project
+      run: |
+        make clean
+        make all
+    
+    - name: Run tests
+      run: |
+        make test
+    
+    - name: Build package
+      run: |
+        make package
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dell-precision-display-fix
+        path: |
+          display_priority_manager
+          *.deb
+          dist/*.tar.gz

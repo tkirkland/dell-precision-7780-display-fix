@@ -1,0 +1,22 @@
+# Build outputs
+display_priority_manager
+*.o
+*.so
+*.a
+
+# Logs
+*.log
+
+# Packages
+*.deb
+*.tar.gz
+dist/
+deb-build/
+
+# Temp files
+*.tmp
+*.lock
+
+# Editor files
+.vscode/
+*.swp
