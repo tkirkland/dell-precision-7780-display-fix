@@ -1,14 +1,14 @@
 [Unit]
 Description=Dell Precision 7780 Display Priority Fix
 Documentation=man:display-priority-fix(8)
-After=graphical-session.target
-Wants=graphical-session.target
+After=graphical.target
+Wants=graphical.target
 # Ensure we run after display management is available
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/local/bin/display_priority_manager --verbose --log /var/log/display_priority_manager.log
+ExecStart=/usr/local/bin/display_priority_manager
 # Set environment for kscreen-doctor
 Environment="XDG_RUNTIME_DIR=/run/user/1000"
 Environment="WAYLAND_DISPLAY=wayland-0"
@@ -22,4 +22,4 @@ StandardOutput=journal+console
 StandardError=journal+console
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=graphical.target
