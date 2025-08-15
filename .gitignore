@@ -17,6 +17,9 @@ deb-build/
 *.tmp
 *.lock
 
+# Development files
+docs/CLAUDE.md
+
 # Editor files
 .vscode/
 *.swp

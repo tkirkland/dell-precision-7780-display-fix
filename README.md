@@ -194,8 +194,7 @@ make package
 │   ├── create_deb_package.sh
 │   └── install_to_iso.sh
 ├── docs/                    # Documentation
-│   ├── INSTALL.md
-│   └── CLAUDE.md
+│   └── INSTALL.md
 ├── display-priority-fix.service  # Systemd service
 ├── Makefile                 # Build system
 ├── README.md               # This file
