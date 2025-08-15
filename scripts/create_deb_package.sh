@@ -133,8 +133,8 @@ EOF
 build_and_copy_files() {
     log "Building source files..."
     
-    # Build in the original directory
-    cd "$SCRIPT_DIR"
+    # Build in the project root directory
+    cd "$PROJECT_DIR"
     make clean
     make all
     
@@ -279,15 +279,15 @@ build_package() {
     if [[ -f "$deb_file" ]]; then
         log "Package built successfully: $deb_file"
         
-        # Move to original directory
-        mv "$deb_file" "$SCRIPT_DIR/"
+        # Move to project root directory
+        mv "$deb_file" "$PROJECT_DIR/"
         
         # Show package info
         log "Package information:"
-        dpkg-deb --info "$SCRIPT_DIR/$deb_file"
+        dpkg-deb --info "$PROJECT_DIR/$deb_file"
         
         log "Package contents:"
-        dpkg-deb --contents "$SCRIPT_DIR/$deb_file"
+        dpkg-deb --contents "$PROJECT_DIR/$deb_file"
         
         return 0
     else
@@ -311,7 +311,7 @@ main() {
     cleanup
     
     log "Debian package creation completed successfully!"
-    log "Package file: $SCRIPT_DIR/${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
+    log "Package file: $PROJECT_DIR/${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
     log ""
     log "To install:"
     log "  sudo dpkg -i ${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
