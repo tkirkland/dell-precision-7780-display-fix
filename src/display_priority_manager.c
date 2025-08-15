@@ -110,13 +110,17 @@ static bool check_dell_precision_7780(void) {
     
     fp = fopen("/sys/class/dmi/id/sys_vendor", "r");
     if (fp) {
-        fgets(vendor, sizeof(vendor), fp);
+        if (fgets(vendor, sizeof(vendor), fp) == NULL) {
+            vendor[0] = '\0';
+        }
         fclose(fp);
     }
     
     fp = fopen("/sys/class/dmi/id/product_name", "r");
     if (fp) {
-        fgets(product, sizeof(product), fp);
+        if (fgets(product, sizeof(product), fp) == NULL) {
+            product[0] = '\0';
+        }
         fclose(fp);
     }
     
@@ -224,6 +228,12 @@ typedef struct {
 
 // Parse kscreen-doctor output
 static int parse_kscreen_output(DisplayInfo** displays, int* count) {
+    // Check if kscreen-doctor is available
+    if (system("which kscreen-doctor >/dev/null 2>&1") != 0) {
+        DPM_LOG_ERROR("kscreen-doctor not found - KDE Plasma not available");
+        return -1;
+    }
+    
     FILE* fp = popen("kscreen-doctor -o 2>/dev/null", "r");
     if (!fp) {
         DPM_LOG_ERROR("Failed to run kscreen-doctor");
@@ -544,8 +554,12 @@ int main(int argc, char* argv[]) {
     signal(SIGTERM, signal_handler);
     
     DPM_LOG_INFO("=== Display Priority Manager Starting (v%s) ===", VERSION);
-    DPM_LOG_INFO("Mode: %d, Verbose: %d, Debug: %d, Force: %d, Dry-run: %d",
-             options.mode, options.verbose, options.debug, options.force, options.dry_run);
+    DPM_LOG_DEBUG("Mode: %d, Verbose: %s, Debug: %s, Force: %s, Dry-run: %s",
+             options.mode, 
+             options.verbose ? "true" : "false",
+             options.debug ? "true" : "false", 
+             options.force ? "true" : "false",
+             options.dry_run ? "true" : "false");
     
     // Check if fix should be applied
     if (!should_apply_fix()) {
